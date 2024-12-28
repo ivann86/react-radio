@@ -4,7 +4,7 @@ export default function SpectrumAnalyzer({ source, audioCtx, className }: any) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const analyser = useRef<AnalyserNode | undefined>();
-  const highShelffFilter = useRef<BiquadFilterNode | undefined>();
+  const lowShelfFilter = useRef<BiquadFilterNode | undefined>();
   const floatDataArray = useRef<Float32Array>(new Float32Array());
   const barsCount = useRef(0);
   const barWidth = useRef(0);
@@ -15,14 +15,14 @@ export default function SpectrumAnalyzer({ source, audioCtx, className }: any) {
     }
 
     analyser.current = audioCtx.createAnalyser();
-    highShelffFilter.current = audioCtx.createBiquadFilter();
+    lowShelfFilter.current = audioCtx.createBiquadFilter();
 
-    highShelffFilter.current!.type = 'lowshelf';
-    highShelffFilter.current!.frequency.value = 1200;
-    highShelffFilter.current!.gain.value = -18;
+    lowShelfFilter.current!.type = 'lowshelf';
+    lowShelfFilter.current!.frequency.value = 1200;
+    lowShelfFilter.current!.gain.value = -18;
 
-    source.connect(highShelffFilter.current);
-    highShelffFilter.current!.connect(analyser.current!);
+    source.connect(lowShelfFilter.current);
+    lowShelfFilter.current!.connect(analyser.current!);
 
     analyser.current!.smoothingTimeConstant = 0.82;
     analyser.current!.fftSize = 128;
